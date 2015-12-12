@@ -1,15 +1,24 @@
 package com.mydrivesolutions.juniortest.fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+
+import android.widget.Toast;
 
 import com.mydrivesolutions.juniortest.R;
+
+import com.mydrivesolutions.juniortest.model.BitmapItem;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,10 +29,17 @@ import butterknife.ButterKnife;
 /**
  * Created by pascalh on 4/12/2015.
  */
-public class ShareFragment extends Fragment {
+public class ShareFragment extends ListFragment {
+
 
     private String imageFolderName = "JuniorTest";
-    List<File> m_fileList = new ArrayList<>();
+
+    private List<BitmapItem> m_bitmapItemList = new ArrayList<>();
+
+    private int bitmapWidth = 1000;
+    private int bitmapHeight = 700;
+
+    private ShareGalleryAdapter m_adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,13 +50,30 @@ public class ShareFragment extends Fragment {
 
         //  Get the list of images from the specified folder directory
         File folderPath = new File(Environment.getExternalStorageDirectory() + File.separator + imageFolderName);
-        m_fileList = GetFileList(folderPath);
 
-        String shareBody = "Here is the share content body";
-        String ShareSubject = "Subject Title";
-        Share(ShareType.ANY, shareBody, ShareSubject, Uri.fromFile(m_fileList.get(0)));
+        m_bitmapItemList = getBitmapItem(folderPath);
+
+        m_adapter = new ShareGalleryAdapter();
+
+        setListAdapter(m_adapter);
 
         return view;
+    }
+
+    public List<BitmapItem> getBitmapItem(File folderPath) {
+        File folder = folderPath;
+        List<BitmapItem> bitmapItemList = new ArrayList<>();
+
+        if (folder.exists()) {
+            for (int i = 0; i < folder.listFiles().length; i++) {
+
+                BitmapItem bitmapItem = new BitmapItem(folder.listFiles()[i].getAbsolutePath(), bitmapWidth, bitmapHeight);
+
+                bitmapItemList.add(bitmapItem);
+
+            }
+        }
+        return bitmapItemList;
     }
 
     /**
@@ -70,25 +103,56 @@ public class ShareFragment extends Fragment {
         startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 
-    /**
-     * This method gets the list of image paths from the JuniorTest folder
-     * @return  The list of image paths from the JuniorTest folder
-     */
-    private List<File> GetFileList(File folderPath) {
-        File folder = folderPath;
-        List<File> fileList = new ArrayList<>();
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
 
-        if (folder.exists()) {
-            for (int i = 0; i < folder.listFiles().length; i++) {
-                //  Add all file path into the fileList
-                fileList.add(folder.listFiles()[i]);
-            }
-        }
+        Toast.makeText(getActivity(), "" + m_bitmapItemList.get(position), Toast.LENGTH_SHORT).show();
 
-        return fileList;
+        String shareBody = "Here is the share content body";
+        String ShareSubject = "Subject Title";
+        Share(ShareType.ANY, shareBody, ShareSubject, Uri.fromFile(m_bitmapItemList.get(position).getFile()));
     }
 
     public enum ShareType {
         TEXT, IMAGE, ANY
+    }
+
+    public class ShareGalleryAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return m_bitmapItemList.size();
+        }
+
+        @Override
+        public BitmapItem getItem(int index) {
+            return m_bitmapItemList.get(index);
+        }
+
+        @Override
+        public long getItemId(int index) {
+            return index;
+        }
+
+        @Override
+        public View getView(int index, View view, ViewGroup parent) {
+
+
+            if (view == null) {
+                LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                view = inflater.inflate(R.layout.gallery_adapter_item, null);
+            }
+
+            Bitmap bitmap = m_bitmapItemList.get(index).getBitmap();
+
+            if (bitmap != null) {
+
+                ImageView imageViewGalleryImage = (ImageView) view.findViewById(R.id.gallery_adapter_item_image);
+                imageViewGalleryImage.setImageBitmap(bitmap);
+
+            }
+
+            return view;
+        }
     }
 }

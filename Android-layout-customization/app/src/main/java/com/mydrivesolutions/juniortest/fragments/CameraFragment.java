@@ -20,7 +20,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -37,7 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mydrivesolutions.juniortest.R;
-import com.mydrivesolutions.juniortest.model.BitmapDecoder;
+import com.mydrivesolutions.juniortest.model.BitmapItem;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -72,46 +71,6 @@ public class CameraFragment extends Fragment {
 
     private String cameraImageFolderName = "JuniorTest";
 
-    private BitmapDecoder bitmapDecoder;
-
-    /**
-     * This method decodes the sampled bitmap from a file
-     *
-     * @param path      Bitmap file path
-     * @param reqWidth  The required width of the bitmap
-     * @param reqHeight The required height of the bitmap
-     * @return The resized bitmap
-     */
-    private static Bitmap decodeSampledBitmapFromFile(String path, int reqWidth, int reqHeight) {
-
-        //First decode with inJustDecodeBounds=true to check dimensions
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(path, options);
-
-        // Calculate inSampleSize, Raw height and width of image
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        options.inPreferredConfig = Bitmap.Config.RGB_565;
-        int inSampleSize = 1;
-
-        if (height > reqHeight) {
-            inSampleSize = Math.round((float) height / (float) reqHeight);
-        }
-        int expectedWidth = width / inSampleSize;
-
-        if (expectedWidth > reqWidth) {
-            inSampleSize = Math.round((float) width / (float) reqWidth);
-        }
-
-        options.inSampleSize = inSampleSize;
-
-        // Decode bitmap with inSampleSize set
-        options.inJustDecodeBounds = false;
-
-        return BitmapFactory.decodeFile(path, options);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -130,24 +89,24 @@ public class CameraFragment extends Fragment {
 
     /**
      * This method creates the folder to save the camera images
+     *
      * @param folderName
      */
-    public void CreateImageDirectory(String folderName)
-    {
+    public void CreateImageDirectory(String folderName) {
         File folder = new File(Environment.getExternalStorageDirectory() + File.separator + folderName);
 
         //  If folder does not exist then create the directory
-        if(!folder.exists()) {
+        if (!folder.exists()) {
             folder.mkdir();
         }
     }
 
     /**
      * This method creates the dated file
-     * @return  File with date formatted name
+     *
+     * @return File with date formatted name
      */
-    public File CreateDatedFile()
-    {
+    public File CreateDatedFile() {
         //  Get the device current date to make each picture name unique
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_ssmmHH");
@@ -165,6 +124,7 @@ public class CameraFragment extends Fragment {
 
     /**
      * This method is called when the camera activity returns. This is where the image bitmap is set
+     *
      * @param requestCode
      * @param resultCode
      * @param data
@@ -176,7 +136,8 @@ public class CameraFragment extends Fragment {
                 File file = new File(pictureFilePath);
 
                 //  We need to get the bitmap from the actual directory otherwise "data" will return a small thumbnail
-                Bitmap bitmap = decodeSampledBitmapFromFile(file.getAbsolutePath(), bitmapWidth, bitmapHeight);
+                BitmapItem bitmapItem = new BitmapItem(file.getAbsolutePath(), bitmapWidth, bitmapHeight);
+                Bitmap bitmap = bitmapItem.getBitmap();
 
                 //  Update the ImageView with the bitmap
                 imageView_cameraPicture.setImageBitmap(bitmap);
@@ -185,7 +146,6 @@ public class CameraFragment extends Fragment {
                 Toast.makeText(getActivity(), "Picture was not taken!", Toast.LENGTH_SHORT).show();
             }
         }
-
     }
 
     /**
@@ -199,8 +159,7 @@ public class CameraFragment extends Fragment {
         addPermission(permissionsList, Manifest.permission.READ_EXTERNAL_STORAGE);
         addPermission(permissionsList, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-        if (permissionsList.size() > 0)
-        {
+        if (permissionsList.size() > 0) {
             //  Ask for user permission for each ungranted permission needed by the camera
             requestPermissions(permissionsList.toArray(new String[permissionsList.size()]),
                     REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
@@ -226,12 +185,12 @@ public class CameraFragment extends Fragment {
 
     /**
      * This method adds the permission string to a permission list if they are not currently granted
+     *
      * @param permissionsList
      * @param permission
      */
     private void addPermission(List<String> permissionsList, String permission) {
-        if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED)
-        {
+        if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
             permissionsList.add(permission);
         }
     }
@@ -239,9 +198,9 @@ public class CameraFragment extends Fragment {
     /**
      * Callback with the request from requestPermission(...)
      *
-     * @param requestCode   The code referring to the permission requested
-     * @param permissions   The list of permissions requested
-     * @param grantResults  The result of the requested permissions
+     * @param requestCode  The code referring to the permission requested
+     * @param permissions  The list of permissions requested
+     * @param grantResults The result of the requested permissions
      */
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -264,8 +223,7 @@ public class CameraFragment extends Fragment {
                 // Check if all permissions have been granted
                 if (perms.get(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
                         && perms.get(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                        && perms.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
-                {
+                        && perms.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 
                     // All Permissions Granted so set the camera button onClickListener
                     button_camera.setOnClickListener(new View.OnClickListener() {

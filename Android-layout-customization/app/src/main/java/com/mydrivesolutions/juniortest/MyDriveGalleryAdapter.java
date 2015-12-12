@@ -69,7 +69,6 @@ public class MyDriveGalleryAdapter extends RecyclerView.Adapter<MyDriveGalleryAd
         final GalleryItem item = itemList.get(position);
         holder.title.setText(item.getTitle());
         ImageHelper.setImage(context, holder.image, item.getUrl());
-
     }
 
     @Override

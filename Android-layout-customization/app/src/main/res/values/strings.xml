@@ -33,13 +33,15 @@
     <string name="pref_sync_frequency_summary">Set the sync frequency</string>
     <string name="pref_user_name">Set username</string>
     <string name="pref_user_name_summary">Set your username</string>
+    <string name="pref_email_address">Set email address</string>
+    <string name="pref_email_address_summary">Set your email address</string>
     <string name="pref_user_profile">User Profile</string>
     <string name="pref_update_setting">Update Settings</string>
 
     <!--  Strings for the 'Communicate' section of activity_main_drawer  -->
     <string name="menu_communicate_title">Communicate</string>
 
-    <string name="share_fragment_title">Share fragment!</string>
+    <string name="share_fragment_title">Select images to share!</string>
     <string name="menu_share_title">Share</string>
 
     <string name="send_fragment_title">Send fragment!</string>

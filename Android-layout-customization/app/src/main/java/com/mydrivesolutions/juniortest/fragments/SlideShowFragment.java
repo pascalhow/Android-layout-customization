@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.mydrivesolutions.juniortest.R;
-import com.mydrivesolutions.juniortest.model.BitmapDecoder;
+import com.mydrivesolutions.juniortest.model.BitmapItem;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class SlideShowFragment extends Fragment {
     private static int SLIDESHOW_INTERVAL = 1000;
     private final Handler handler = new Handler();
     public int currentImageIndex = 0;
-    private BitmapDecoder bitmapDecoder;
+    private BitmapItem bitmapItem;
 
     @Bind(R.id.imageView_slideShow)
     ImageView imageView_slideShow;
@@ -37,8 +37,8 @@ public class SlideShowFragment extends Fragment {
     TextView textView_slideShow;
 
     List<File> m_fileList = new ArrayList<>();
-    private int bitmapWidth = 1000;
-    private int bitmapHeight = 700;
+    private int bitmapWidth = 700;
+    private int bitmapHeight = 1000;
     private String imageFolderName = "JuniorTest";
 
     @Override
@@ -54,13 +54,16 @@ public class SlideShowFragment extends Fragment {
 
         if (m_fileList.size() > 0)
         {
+            //  Make display text invisible
+            textView_slideShow.setText("");
+
             //  We have some images to display in slideshow!
             final Runnable runnable = new Runnable()
             {
                 public void run() {
                     //  We need to get the bitmap from the actual directory otherwise "data" will return a small thumbnail
-                    bitmapDecoder = new BitmapDecoder(m_fileList.get(currentImageIndex).getAbsolutePath(), bitmapWidth, bitmapHeight);
-                    Bitmap bitmap = bitmapDecoder.decodeSampledBitmapFromFile();
+                    bitmapItem = new BitmapItem(m_fileList.get(currentImageIndex).getAbsolutePath(), bitmapWidth, bitmapHeight);
+                    Bitmap bitmap = bitmapItem.getBitmap();
 
                     //  Update the ImageView with the bitmap
                     imageView_slideShow.setImageBitmap(bitmap);

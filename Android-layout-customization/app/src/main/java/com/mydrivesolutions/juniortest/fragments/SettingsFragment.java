@@ -37,22 +37,29 @@ public class SettingsFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
+        //  Show current user settings
         showUserSettings();
 
         buttonUserSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getActivity(), UserSettings.class);
+
+                //  Launch the settings page
                 startActivityForResult(i, RESULT_SETTINGS);
             }
         });
         return view;
     }
 
+    /**
+     * This method shows the current user settings
+     */
     private void showUserSettings() {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         String savedUserSettings = "\n Username: " + sharedPrefs.getString("prefUsername", "NULL");
+        savedUserSettings += "\n Email address:" + sharedPrefs.getString("prefEmailAddress", "NULL");
         savedUserSettings += "\n Send report:" + sharedPrefs.getBoolean("prefSendReport", false);
         savedUserSettings += "\n Sync Frequency: " + sharedPrefs.getString("prefSyncFrequency", "NULL");
 
@@ -65,6 +72,7 @@ public class SettingsFragment extends Fragment {
 
         switch (requestCode) {
             case RESULT_SETTINGS:
+                //  Update user settings
                 showUserSettings();
                 break;
         }

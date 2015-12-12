@@ -24,6 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/textView_camera"
         android:layout_centerInParent="true"
+        android:textColor="#FFFFFF"
         android:text="@string/camera_button_text" />
 
     <ImageView
@@ -36,6 +37,5 @@
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_fragment_picture" />
-
 
 </RelativeLayout>
