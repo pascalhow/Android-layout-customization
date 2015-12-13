@@ -82,7 +82,7 @@ public class SlideShowFragment extends Fragment {
             handler.postDelayed(runnable, SLIDESHOW_INTERVAL);
         } else
         {
-            textView_slideShow.setText("Sorry no images to display");
+            textView_slideShow.setText("Sorry no images to display in JuniorTest folder");
         }
         return view;
     }

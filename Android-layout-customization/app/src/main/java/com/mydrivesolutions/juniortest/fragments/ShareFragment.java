@@ -14,6 +14,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mydrivesolutions.juniortest.R;
@@ -24,12 +25,16 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
  * Created by pascalh on 4/12/2015.
  */
 public class ShareFragment extends ListFragment {
+    @Bind(R.id.textView_share)
+    TextView textView_share;
+
     private String imageFolderName = "JuniorTest";
 
     private List<BitmapItem> m_bitmapItemList = new ArrayList<>();
@@ -51,9 +56,17 @@ public class ShareFragment extends ListFragment {
 
         m_bitmapItemList = getBitmapItem(folderPath);
 
-        m_adapter = new ShareGalleryAdapter();
+        if(m_bitmapItemList.size() > 0)
+        {
+            //  We have some images to choose from
+            m_adapter = new ShareGalleryAdapter();
 
-        setListAdapter(m_adapter);
+            setListAdapter(m_adapter);
+        }
+        else
+        {
+            textView_share.setText("Sorry no images to select in JuniorTest folder");
+        }
 
         return view;
     }
