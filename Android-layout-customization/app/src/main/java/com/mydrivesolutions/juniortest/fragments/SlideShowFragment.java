@@ -100,13 +100,12 @@ public class SlideShowFragment extends Fragment {
      * @return  The list of image paths from the JuniorTest folder
      */
     private List<File> GetFileList(File folderPath) {
-        File folder = folderPath;
         List<File> fileList = new ArrayList<>();
 
-        if (folder.exists()) {
-            for (int i = 0; i < folder.listFiles().length; i++) {
+        if (folderPath.exists()) {
+            for (int i = 0; i < folderPath.listFiles().length; i++) {
                 //  Add all file path into the fileList
-                fileList.add(folder.listFiles()[i]);
+                fileList.add(folderPath.listFiles()[i]);
             }
         }
 

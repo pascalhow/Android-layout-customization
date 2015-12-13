@@ -23,10 +23,18 @@ public class BitmapItem {
         this.bitmap = decodeSampledBitmapFromFile(this.file.getAbsolutePath());
     }
 
+    /**
+     * This method returns the decoded bitmap
+     * @return  Decoded bitmap
+     */
     public Bitmap getBitmap() {
         return this.bitmap;
     }
 
+    /**
+     * This method returns the Image file
+     * @return  Image file
+     */
     public File getFile() {
         return this.file;
     }

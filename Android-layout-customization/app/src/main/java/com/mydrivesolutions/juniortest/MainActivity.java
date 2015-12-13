@@ -20,7 +20,6 @@ import com.mydrivesolutions.juniortest.fragments.AboutMeFragment;
 import com.mydrivesolutions.juniortest.fragments.CameraFragment;
 import com.mydrivesolutions.juniortest.fragments.GalleryFragment;
 import com.mydrivesolutions.juniortest.fragments.SettingsFragment;
-import com.mydrivesolutions.juniortest.fragments.SendFragment;
 import com.mydrivesolutions.juniortest.fragments.ShareFragment;
 import com.mydrivesolutions.juniortest.fragments.SlideShowFragment;
 
@@ -50,8 +49,6 @@ public class MainActivity extends AppCompatActivity
 
                 //  Finally send the email to the customer
                 sendEmail(recipient, subject, message);
-
-                //  Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
         });
 
@@ -64,6 +61,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //  Load the camera fragment for starters
         loadFragment(new CameraFragment());
     }
 
@@ -106,6 +104,7 @@ public class MainActivity extends AppCompatActivity
                 return true;
 
             case R.id.action_settings:
+                //  Load standard android settings page
                 startActivityForResult(new Intent(android.provider.Settings.ACTION_SETTINGS), 0);
                 return true;
 
@@ -138,9 +137,6 @@ public class MainActivity extends AppCompatActivity
             //  These are under the Communicate group
             case R.id.nav_share:
                 loadFragment(new ShareFragment());
-                break;
-            case R.id.nav_send:
-                loadFragment(new SendFragment());
                 break;
         }
 

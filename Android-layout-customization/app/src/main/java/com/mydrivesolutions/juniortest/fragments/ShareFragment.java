@@ -30,8 +30,6 @@ import butterknife.ButterKnife;
  * Created by pascalh on 4/12/2015.
  */
 public class ShareFragment extends ListFragment {
-
-
     private String imageFolderName = "JuniorTest";
 
     private List<BitmapItem> m_bitmapItemList = new ArrayList<>();
@@ -60,14 +58,19 @@ public class ShareFragment extends ListFragment {
         return view;
     }
 
+    /**
+     * This method returns a list of BitmapItem.
+     * BitmapItem objects contain the image file information and the corresponding bitmap
+     * @param folderPath    Folder to look for bitmaps
+     * @return  List of BitmapItem
+     */
     public List<BitmapItem> getBitmapItem(File folderPath) {
-        File folder = folderPath;
         List<BitmapItem> bitmapItemList = new ArrayList<>();
 
-        if (folder.exists()) {
-            for (int i = 0; i < folder.listFiles().length; i++) {
+        if (folderPath.exists()) {
+            for (int i = 0; i < folderPath.listFiles().length; i++) {
 
-                BitmapItem bitmapItem = new BitmapItem(folder.listFiles()[i].getAbsolutePath(), bitmapWidth, bitmapHeight);
+                BitmapItem bitmapItem = new BitmapItem(folderPath.listFiles()[i].getAbsolutePath(), bitmapWidth, bitmapHeight);
 
                 bitmapItemList.add(bitmapItem);
 
@@ -93,13 +96,15 @@ public class ShareFragment extends ListFragment {
             case IMAGE:
                 sharingIntent.setType("image/jpeg");
                 break;
-            case ANY:
+            case TEXT_AND_IMAGE:
                 sharingIntent.setType("*/*");
         }
 
-        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, body);
-        sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);  //  Share subject
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, body);        //  Share text body
+        sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);                       //  Share image
+
+        //  Start share activity
         startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 
@@ -110,11 +115,13 @@ public class ShareFragment extends ListFragment {
 
         String shareBody = "Here is the share content body";
         String ShareSubject = "Subject Title";
-        Share(ShareType.ANY, shareBody, ShareSubject, Uri.fromFile(m_bitmapItemList.get(position).getFile()));
+
+        //  Share the files and texts
+        Share(ShareType.TEXT_AND_IMAGE, shareBody, ShareSubject, Uri.fromFile(m_bitmapItemList.get(position).getFile()));
     }
 
     public enum ShareType {
-        TEXT, IMAGE, ANY
+        TEXT, IMAGE, TEXT_AND_IMAGE
     }
 
     public class ShareGalleryAdapter extends BaseAdapter {
@@ -136,9 +143,8 @@ public class ShareFragment extends ListFragment {
 
         @Override
         public View getView(int index, View view, ViewGroup parent) {
-
-
             if (view == null) {
+                //  Inflate our ListView with gallery_adapter_item
                 LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 view = inflater.inflate(R.layout.gallery_adapter_item, null);
             }
@@ -147,9 +153,9 @@ public class ShareFragment extends ListFragment {
 
             if (bitmap != null) {
 
+                //  set the bitmap with the image from JuniorTest folder
                 ImageView imageViewGalleryImage = (ImageView) view.findViewById(R.id.gallery_adapter_item_image);
                 imageViewGalleryImage.setImageBitmap(bitmap);
-
             }
 
             return view;

@@ -32,7 +32,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mydrivesolutions.juniortest.R;
@@ -61,9 +60,6 @@ public class CameraFragment extends Fragment {
 
     @Bind(R.id.cameraButton)
     Button button_camera;
-
-    @Bind(R.id.textView_camera)
-    TextView textView_cameraLabel;
 
     private String pictureFilePath;
     private int bitmapWidth = 1000;
