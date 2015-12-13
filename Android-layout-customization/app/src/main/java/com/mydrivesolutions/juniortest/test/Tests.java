@@ -8,8 +8,6 @@ import com.mydrivesolutions.juniortest.fragments.CameraFragment;
 import com.mydrivesolutions.juniortest.utils.JsonUtil;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 /**
  * Created by pascalh on 13/12/2015.

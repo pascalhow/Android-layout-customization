@@ -22,10 +22,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.Toast;
 
-import com.mydrivesolutions.juniortest.MainActivity;
 import com.mydrivesolutions.juniortest.MyDriveGalleryAdapter;
 import com.mydrivesolutions.juniortest.R;
 import com.mydrivesolutions.juniortest.model.GalleryItem;
